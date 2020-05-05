@@ -87,6 +87,15 @@ public class UtilBlock {
 		return false;
 	}
 
+	public static boolean slideable(Block block) {
+		Material m = block.getType();
+		if (m== Material.HONEY_BLOCK) {
+			return true;
+		}
+		
+		return false;
+	}
+
 	public static ArrayList<Material> getSurroundingMat(Block block, boolean diagonals) {
 		ArrayList<Material> blocks = new ArrayList<Material>();
 

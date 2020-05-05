@@ -39,6 +39,7 @@ public class SmartFlightCheck extends Check {
 	public CheckResult performCheck(User u, Event e) {
 		Player p = u.getPlayer();
 
+		// Excemption conditions
 		if (p.isInsideVehicle() || p.isGliding() || p.isFlying() || p.isSwimming()
 				|| p.getLocation().getBlock().isLiquid()
 				|| p.getLocation().getBlock().getRelative(BlockFace.DOWN).isLiquid() || p.isInsideVehicle()) {
@@ -53,6 +54,7 @@ public class SmartFlightCheck extends Check {
 			BAC.getBAC().EXEMPTHANDLER.addExemption(p, 5, "on stairs");
 		}
 
+		// Check if checks should take water travel into account
 		Boolean aroundwater = false;
 		for (Block b : UtilBlock.getSurrounding(p.getLocation().getBlock(), true)) {
 			if (b.isLiquid()) {
@@ -61,6 +63,17 @@ public class SmartFlightCheck extends Check {
 			}
 		}
 		Boolean inwater = UtilBlock.isSwimming(p);
+
+		// Check if checks should take nearby honey sliding into account
+		Boolean aroundSlideable = false;
+		for(Block b : UtilBlock.getSurrounding(p.getLocation().getBlock(), false)) {
+			if (UtilBlock.slideable(b)) {
+				aroundSlideable = true;
+				break;
+			}
+		}
+
+		// Initalize storage for results of sucessive checks
 		if (!gc.containsKey(p))
 			gc.put(p, 0);
 
@@ -73,7 +86,8 @@ public class SmartFlightCheck extends Check {
 		if (!fl.containsKey(p))
 			fl.put(p, 0);
 
-		if (h >= 0.120 && UtilBlock.climbable(p.getLocation().getBlock()) && aroundwater == false) {
+		// Flight check
+		if (h >= 0.120 && UtilBlock.climbable(p.getLocation().getBlock()) && !aroundwater) {
 			fl.put(p, fl.get(p) + 1);
 		} else {
 			fl.put(p, 0);
@@ -84,29 +98,33 @@ public class SmartFlightCheck extends Check {
 			sc.put(p, 0);
 		}
 
+		// Glide Check
 		if (!UtilBlock.climbable(p.getLocation().getBlock()) && !p.hasPotionEffect(PotionEffectType.SLOW_FALLING)
-				&& h.equals(fr.get(p)) && u.isFalling() && h > -0.3 && inwater == false) {
+				&& h.equals(fr.get(p)) && u.isFalling() && h > -0.3 && !inwater && !aroundSlideable) {
 			gc.put(p, gc.get(p) + 1);
 		} else {
 			gc.put(p, 0);
 		}
-		if (gc.get(p) > 4 && inwater == false) {
+		if (gc.get(p) > 4) {
 			gc.put(p, 0);
 			if (!UtilBlock.climbable(p.getLocation().getBlock())) {
 				return new CheckResult("Glide/SlowFall", false, "slower than usual & steady rate");
 			}
 		}
 
+		// Spider check
 		if (sc.get(p) > 4 && inwater == false) {
 			sc.put(p, 0);
 			return new CheckResult("Spider", false, "abnormal y increase");
 		}
 
+		// Fastclimb check
 		if (fl.get(p) > 4) {
 			fl.put(p, 0);
 			return new CheckResult("FastClimb", false, "climbed at " + UtilMath.trim(4, h) + ", max possible is 0.120");
 		}
 
+		// Store the height for usage next time we check
 		if (h < 0.001) {
 			fr.put(p, h);
 		}
