@@ -64,7 +64,7 @@ public class FlightFCheck extends Check {
 				&& !nearby.contains(Material.LADDER) && !nearby.contains(Material.SCAFFOLDING)
 				&& !nearby.contains(Material.VINE) && !VersionUtil.isSwimming(u.getPlayer()) && to.getY() >= from.getY()
 				&& UtilTime.elapsed(PlayerLogger.getLogger().getLastVelocity(u.getPlayer()), 1000L)
-				&& !nearby.contains(Material.WATER)) {
+				&& !nearby.contains(Material.WATER) && !u.getPlayer().getLocation().getBlock().isLiquid()) {
 			if (diff > 0.025) {
 				if (vl++ > 7) {
 					return new CheckResult("Flight", false, "Type F");
