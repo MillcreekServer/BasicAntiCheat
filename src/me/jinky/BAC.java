@@ -46,6 +46,7 @@ import me.jinky.handlers.BlockHandler;
 import me.jinky.handlers.CStatsHandler;
 import me.jinky.handlers.DamageHandler;
 import me.jinky.handlers.ExemptHandler;
+import me.jinky.handlers.HorseJumpHandler;
 import me.jinky.handlers.MovementHandler;
 import me.jinky.logger.PlayerLogger;
 import me.jinky.logger.User;
@@ -84,6 +85,7 @@ public class BAC extends JavaPlugin implements Listener {
 
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 100L, 1L);
 		this.getServer().getPluginManager().registerEvents(this, this);
+		this.getServer().getPluginManager().registerEvents(new HorseJumpHandler(), this);
 		Settings.loadConfig();
 		BungeeHandler.load(this);
 

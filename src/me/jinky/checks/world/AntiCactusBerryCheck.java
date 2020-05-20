@@ -3,12 +3,14 @@ package me.jinky.checks.world;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 
 import me.jinky.BAC;
 import me.jinky.checks.Check;
 import me.jinky.checks.CheckResult;
+import me.jinky.handlers.HorseJumpHandler;
 import me.jinky.logger.User;
 
 public class AntiCactusBerryCheck extends Check {
@@ -63,7 +65,17 @@ public class AntiCactusBerryCheck extends Check {
 				antiberry = true;
 				bb = p.getLocation().add(-0.301, 0, 0).getBlock();
 			}
-			if (bb != null) {
+
+			if (antiberry && p.isInsideVehicle()) {
+				if (p.getVehicle() instanceof Horse) {
+					Horse horse = (Horse) p.getVehicle();
+					if (HorseJumpHandler.horseIsJumping(horse)) {
+						antiberry = false;
+					}
+				}
+			}
+
+			if (antiberry &&  bb != null) {
 				if (bb.getBlockData() instanceof Ageable) {
 					Ageable age = (Ageable) bb.getBlockData();
 					if (age.getAge() > 0) {
