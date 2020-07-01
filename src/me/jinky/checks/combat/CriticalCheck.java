@@ -49,8 +49,7 @@ public class CriticalCheck extends Check {
 		return player.getFallDistance() > 0.0f && !player.isOnGround() && !player.isInsideVehicle()
 				&& !player.hasPotionEffect(PotionEffectType.BLINDNESS)
 				&& !UtilBlock.isHoveringOverWater(player.getLocation(), 25)
-				&& player.getEyeLocation().getBlock().getType() != Material.LADDER
-				&& player.getEyeLocation().getBlock().getType() != Material.VINE;
+				&& !UtilBlock.climbable(player.getEyeLocation().getBlock());
 	}
 
 }

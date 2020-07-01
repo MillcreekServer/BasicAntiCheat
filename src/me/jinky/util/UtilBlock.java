@@ -84,6 +84,8 @@ public class UtilBlock {
 			return true;
 		if (m == Material.SCAFFOLDING)
 			return true;
+		if (m == Material.WEEPING_VINES)
+			return true;
 		return false;
 	}
 

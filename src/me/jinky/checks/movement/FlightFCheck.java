@@ -62,7 +62,7 @@ public class FlightFCheck extends Check {
 		List<Material> nearby = UtilBlock.getSurroundingMat(u.getBlock(), true);
 		if (u.getVehicle() == null && !u.getPlayer().isOnGround() && !VersionUtil.isFlying(u.getPlayer())
 				&& !nearby.contains(Material.LADDER) && !nearby.contains(Material.SCAFFOLDING)
-				&& !nearby.contains(Material.VINE) && !VersionUtil.isSwimming(u.getPlayer()) && to.getY() >= from.getY()
+				&& !nearby.contains(Material.VINE) && !nearby.contains(Material.WEEPING_VINES) && !VersionUtil.isSwimming(u.getPlayer()) && to.getY() >= from.getY()
 				&& UtilTime.elapsed(PlayerLogger.getLogger().getLastVelocity(u.getPlayer()), 1000L)
 				&& !nearby.contains(Material.WATER) && !u.getPlayer().getLocation().getBlock().isLiquid()) {
 			if (diff > 0.025) {
